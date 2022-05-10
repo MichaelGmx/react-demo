@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo8</title>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react-dom.js"></script> -->
+  <script src="../build/react.development.16.8.0.js"></script>
+  <script src="../build/react-dom.development.16.8.0.js"></script>
+  <script src="../build/babel.min.js"></script>
+  <style>
+    p { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div id="example"></div>
+  <script type="text/babel">
+    // // 15.x以前的方法(16.x以后已废弃)
+    // var LikeButton = React.createClass({
+    //   getInitialState: function() {
+    //     return { liked: false };
+    //   },
+    //   handleClick: function(event) {
+    //     this.setState({ liked: !this.state.liked });
+    //   },
+    //   render: function() {
+    //     var text = this.state.liked ? 'like' : 'haven\'t like';
+    //     return (
+    //       <p onClick={this.handleClick}>
+    //         You {text} this. Click to toggle.
+    //       </p>
+    //     );
+    //   }
+    // });
+
+
+
+    // Class 方式1：
+    class LikeButton extends React.Component {
+      constructor (props) {
+        super(props);
+
+        this.state = {
+          liked: false
+        }
+        this.handleClick = this.handleClick.bind(this);
+      }
+      handleClick(event) {
+        this.setState({ liked: !this.state.liked });
+      }
+      render() {
+        var text = this.state.liked ? 'like' : 'haven\'t like';
+        return (
+          <p onClick={this.handleClick}>
+            You {text} this. Click to toggle.
+          </p>
+        );
+      }
+    }
+
+    // Class 方式2：
+    class LikeButton2 extends React.Component {
+      state = {
+        liked: false
+      };
+      
+      handleClick = event => {   // 箭头函数，可以省略bind的this设置
+        this.setState({ liked: !this.state.liked });
+      };
+
+      render() {
+        var text = this.state.liked ? 'like' : 'haven\'t like';
+        return (
+          <p onClick={this.handleClick}>
+            You {text} this. Click to toggle.
+          </p>
+        );
+      }
+    }
+
+
+    // Hook2 方式：
+    const LikeButton3 = () => {
+      const [liked, setLiked] = React.useState(false);
+
+      const handleClick = event => {
+        setLiked(!liked);
+      }
+
+      let text = liked ? 'like' : 'haven\'t like';
+
+      return (
+        <p onClick={handleClick}>
+          You {text} this. Click to toggle.
+        </p>
+      )
+    };
+
+    ReactDOM.render(
+      <div>
+        <LikeButton />
+        <LikeButton2 />
+        <LikeButton3 />
+      </div>,
+      document.getElementById('example')
+    )
+  </script>
+</body>
+</html>

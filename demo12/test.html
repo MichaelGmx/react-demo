@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo12</title>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react-dom.js"></script> -->
+  <script src="../build/react.development.16.8.0.js"></script>
+  <script src="../build/react-dom.development.16.8.0.js"></script>
+  <script src="../build/babel.min.js"></script>
+  <script src="../build/jquery.min.js"></script>
+  <style>
+    .container { display: flex; flex-direction: row; }
+    .container main { flex: 1; }
+  </style>
+</head>
+<body>
+  <div id="example"></div>
+  <script type="text/babel">
+    // // 15.x以前的方法(16.x以后已废弃)
+    // var RepoList = React.createClass({
+    //   getInitialState: function () {
+    //     return { loading: true, error: null, data: null };
+    //   },
+    //   componentDidMount: function() {
+    //     this.props.promise.then(
+    //       value => this.setState({ loading: false, data: value }),
+    //       error => this.setState({ loading: false, error: error }),
+    //     );
+    //   },
+    //   render: function() {
+    //     if (this.state.loading) {
+    //       return <span>Loading...</span>;
+    //     } else if (this.state.error !== null) {
+    //       return <span>Error: {this.state.error.message}</span>
+    //     } else {
+    //       var repos = this.state.data.items;
+    //       var repoList = repos.map(function (repo, index) {
+    //         return (
+    //           <li key={index}>
+    //             <a href={repo.html_url}>{repo.name}</a> ({repo.stargazers_count} stars) <br/> {repo.description}
+    //           </li>
+    //         )
+    //       });
+    //       return (
+    //         <main>
+    //           <h1>Most Populr JavaScript Projects in Github</h1>
+    //           <ol>{repoList}</ol>
+    //         </main>
+    //       )
+    //     }
+    //   }
+    // });
+
+
+    // Class 方式：
+    class RepoList extends React.Component {
+      // constructor(props) {
+      //   super(props);
+      //   this.state = { loading: true, error: null, data: null };
+      // }
+
+      state = {
+        loading: true,
+        error: null,
+        data: null
+      };
+
+      componentDidMount() {
+        this.props.promise.then(
+          value => this.setState({ loading: false, data: value }),
+          error => this.setState({ loading: false, error: error }),
+        );
+      }
+
+      render() {
+        if (this.state.loading) {
+          return <span>Loading...</span>;
+        } else if (this.state.error !== null) {
+          return <span>Error: {this.state.error.message}</span>
+        } else {
+          var repos = this.state.data.items;
+          var repoList = repos.map(function (repo, index) {
+            return (
+              <li key={index}>
+                <a href={repo.html_url}>{repo.name}</a> ({repo.stargazers_count} stars) <br/> {repo.description}
+              </li>
+            )
+          });
+          return (
+            <main>
+              <h2>Most Populr JavaScript Projects in Github</h2>
+              <ol>{repoList}</ol>
+            </main>
+          )
+        }
+      }
+    }
+
+
+    // Hooks 方式：
+    const RepoList2 = ({ promise }) => {
+      const [ loading, setLoading ] = React.useState(true);
+      const [ error,   setError ] =   React.useState(null);
+      const [ data,    setData ] =    React.useState(null);
+
+      React.useEffect(() => {
+        promise.then(
+          value => {
+            setData(value);
+            setLoading(false);
+          },
+          error => {
+            setError(error);
+            setLoading(false);
+          }
+        )
+      }, [promise]);
+
+      if (loading) {
+        return <span>Loading...</span>;
+      } else if (error !== null) {
+        return <span>Error: {error.message}</span>;
+      }
+
+      let repoList;
+      if (data && data.items) {
+        const repos = data.items;
+        repoList = repos.map((repo, index) => {
+          return (
+            <li key={index}>
+              <a href={repo.html_url}>{repo.name}</a>（{repo.stargazers_count} stars）
+              <br />
+              {repo.description}
+            </li>
+          );
+        });
+      }
+
+      return (
+        <main>
+          <h2>Most Populr React Projects in Github</h2>
+          <ol>{repoList}</ol>
+        </main>
+      )
+    };
+
+    ReactDOM.render(
+      <div className="container">
+        <RepoList promise={$.getJSON('https://api.github.com/search/repositories?q=javascript&sort=stars')} />
+        <RepoList2 promise={$.getJSON('https://api.github.com/search/repositories?q=react&sort=stars')} />
+      </div>,
+      document.getElementById('example')
+    )
+  </script>
+</body>
+</html>

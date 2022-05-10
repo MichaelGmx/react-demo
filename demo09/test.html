@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo9</title>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react-dom.js"></script> -->
+  <script src="../build/react.development.16.8.0.js"></script>
+  <script src="../build/react-dom.development.16.8.0.js"></script>
+  <script src="../build/babel.min.js"></script>
+</head>
+<body>
+  <div id="example"></div>
+  <script type="text/babel">
+    // // 15.x以前的方法(16.x以后已废弃)
+    // var Input = React.createClass({
+    //   getInitialState: function() {
+    //     return { value: 'Hello' };
+    //   },
+    //   handleChange: function(event) {
+    //     this.setState({ value: event.target.value });
+    //   },
+    //   render: function() {
+    //     var value = this.state.value;
+    //     return (
+    //       <div>
+    //         <input type="text" value={value} onChange={this.handleChange} />
+    //         <p>{value}</p>
+    //       </div>
+    //     );
+    //   }
+    // });
+
+
+
+    // Class 方式：
+    class MyInput extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          value: 'Hello'
+        }
+        this.handleChange = this.handleChange.bind(this);
+      }
+      handleChange(event) {
+        this.setState({ value: event.target.value });
+      }
+      render() {
+        var myValue = this.state.value;
+        return (
+          <React.Fragment>
+            <input type="text" value={myValue} onChange={this.handleChange} />
+            <p>{myValue}</p>
+          </React.Fragment>
+        );
+      }
+    }
+
+
+    // Class 方式2：
+    class MyInput2 extends React.Component {
+      // constructor(props) {
+      //   super(props);
+      //   this.state = {
+      //     value: 'Hello'
+      //   }
+      //   this.handleChange = this.handleChange.bind(this);
+      // }
+      // handleChange(event) {
+      //   this.setState({ value: event.target.value });
+      // }
+
+      // 构造函数初始化 可以替换为如下：
+      // props在此例子中未使用，可以暂忽略
+      state = {
+        value: 'Hello'
+      };
+
+      // 使用class fields语法，可以省去构造函数中的this绑定
+      handleChange = event => {
+        this.setState({ value: event.target.value });
+      }
+      render() {
+        var myValue = this.state.value;
+        return (
+          <React.Fragment>
+            <input type="text" value={myValue} onChange={this.handleChange} />
+            <p>{myValue}</p>
+          </React.Fragment>
+        );
+      }
+    }
+
+
+    // Hooks 方式：
+    const MyInput3 = () => {
+      const [myValue, setMyValue] = React.useState('Hello');
+
+      const handleChange = event => {
+        setMyValue(event.target.value);
+      }
+
+      return (
+        <React.Fragment>
+          <input type="text" value={myValue} onChange={handleChange} />
+          <p>{myValue}</p>
+        </React.Fragment>
+      )
+    };
+
+    ReactDOM.render(
+      <div>
+        <MyInput />
+        <MyInput2 />
+        <MyInput3 />
+      </div>,
+      document.getElementById('example')
+    )
+  </script>
+</body>
+</html>

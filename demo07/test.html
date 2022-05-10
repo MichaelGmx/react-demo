@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo7</title>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react-dom.js"></script> -->
+  <script src="../build/react.development.16.8.0.js"></script>
+  <script src="../build/react-dom.development.16.8.0.js"></script>
+  <script src="../build/babel.min.js"></script>
+</head>
+<body>
+  <div id="example"></div>
+  <script type="text/babel">
+    // // 15.x以前的方法(16.x以后已废弃)
+    // var MyComponent = React.createClass({
+    //   handleClick: function() {
+    //     this.refs.myTextInput.focus();
+    //   },
+    //   render: function () {
+    //     return (
+    //       <div>
+    //         <input type="text" ref="myTextInput" />
+    //         <input type="button" value="Focus the text input" onClick={this.handleClick} />
+    //       </div>
+    //     );
+    //   }
+    // });
+
+
+    // Class 方式：
+    class MyComponent extends React.Component {
+      constructor (props) {
+        super(props);
+        this.myTextInput = React.createRef();
+        this.handleClick = this.handleClick.bind(this);
+      }
+
+      handleClick() {
+        this.myTextInput.current.focus();
+      }
+
+      render() {
+        return (
+          <React.Fragment>
+            <input type="text" ref={this.myTextInput} />
+            <input type="button" value="Focus the text input" onClick={this.handleClick} />
+          </React.Fragment>
+        );
+      }
+    }
+
+
+    // Hooks 方式：
+    // useRef(初始值)
+    const YourComponent = () => {
+      // const myTextInput = React.createRef();
+      const myTextInput = React.useRef(null);
+
+      const handleClick = () => {
+        myTextInput.current.focus();
+      }
+
+      return (
+        <React.Fragment>
+          <input type="text" ref={myTextInput} />
+          <input type="button" value="Focus the text input" onClick={handleClick} />
+        </React.Fragment>
+      )
+    };
+
+    ReactDOM.render(
+      <React.Fragment>
+        <MyComponent />
+        <br />
+        <YourComponent />
+      </React.Fragment>,
+      document.getElementById('example')
+    )
+  </script>
+</body>
+</html>

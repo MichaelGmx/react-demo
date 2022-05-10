@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo5</title>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react-dom.js"></script> -->
+  <script src="../build/react.development.16.8.0.js"></script>
+  <script src="../build/react-dom.development.16.8.0.js"></script>
+  <script src="../build/babel.min.js"></script>
+</head>
+<body>
+  <div id="example"></div>
+  <script type="text/babel">
+    // // 15.x以前的方法(16.x以后已废弃)
+    // var NotesList = React.createClass({
+    //   render: function() {
+    //     return (
+    //       <ol>
+    //         {
+    //           React.Children.map(this.props.children, function (child) {
+    //             return <li>{child}</li>;
+    //           })
+    //         }
+    //       </ol>
+    //     );
+    //   }
+    // });
+
+
+    // Class 方式：
+    class NotesList extends React.Component {
+      render() {
+        return (
+          <ol>
+            {
+              React.Children.map(this.props.children, function (child, index) {
+                return <li key={index}>{child}</li>;
+              })
+            }
+          </ol>
+        );
+      }
+    }
+
+
+    // Class 方式2：
+    class CustomUx extends React.Component {
+      // render() {
+      //   return <div className="btn">{this.props.children}</div>;
+      // }
+      // 同上，但可以不用考虑是object还是array
+      render() {
+        return (
+          <React.Fragment>
+            {
+              React.Children.map(this.props.children, function (child, index) {
+                return <div key={index} className="btn">{child}</div>
+              })
+            }
+          </React.Fragment>
+        );
+      }
+    }
+
+
+    // Hook 方式：
+    const CustomUxHooks = props => {
+      const { children } = props;
+
+      return (
+        <React.Fragment>
+          {
+            React.Children.map(children, (child, index) => {
+              return <div key={index} className="btn">{child}</div>
+            })
+          }
+        </React.Fragment>
+      )
+    }
+
+    ReactDOM.render(
+      <section>
+        <NotesList>
+          <span>hello</span>
+          <span>workd</span>
+        </NotesList>
+        <CustomUx>
+          <button>click me</button>
+        </CustomUx>
+        <CustomUxHooks>
+          <button>click me</button>
+        </CustomUxHooks>
+      </section>,
+      document.getElementById('example')
+    );
+  </script>
+</body>
+</html>

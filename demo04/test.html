@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo4</title>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react-dom.js"></script> -->
+  <script src="../build/react.development.16.8.0.js"></script>
+  <script src="../build/react-dom.development.16.8.0.js"></script>
+  <script src="../build/babel.min.js"></script>
+</head>
+<body>
+  <div id="example"></div>
+  <script type="text/babel">
+    // // 15.x以前的方法(16.x以后已废弃)
+    // var HelloMessage = React.createClass({
+    //   render: function() {
+    //     return <h1>Hello {this.props.name}</h1>
+    //   }
+    // });
+
+
+    // Class 方式：
+    class HelloMessage extends React.Component {
+      render() {
+        return <h1>Hello {this.props.name}</h1>;
+      }
+    }
+
+
+    // // Hooks 方式：
+    // const HelloMessage = (props) => {
+    //   return <h1>Hello {props.name}</h1>;
+    // }
+
+
+    // // Hooks 方式2：
+    // const HelloMessage = ({ name }) => {
+    //   return <h1>Hello {name}</h1>;
+    // }
+
+    ReactDOM.render(
+      <HelloMessage name="kate" />,
+      document.getElementById('example')
+    )
+  </script>
+</body>
+</html>

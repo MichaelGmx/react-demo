@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo6</title>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react-dom.js"></script> -->
+  <script src="../build/react.development.16.8.0.js"></script>
+  <script src="../build/react-dom.development.16.8.0.js"></script>
+  <script src="../build/babel.min.js"></script>
+  <script src="../build/prop-types.js"></script><!-- 注意这里又引入了一个script文件 -->
+</head>
+<body>
+  <div id="example"></div>
+  <script type="text/babel">
+    // // 15.x以前的方法(16.x以后已废弃)
+    // var MyTitle = React.createClass({
+    //   propTypes: {
+    //     title: React.PropTypes.string.isRequired,
+    //   },
+    //   getDefaultProps: function () {  // 设置组件属性默认值
+    //     return {
+    //       title: 'Hello React'
+    //     };
+    //   },
+
+    //   render: function () {
+    //     return <h1>{this.props.title}</h1>
+    //   }
+    // });
+
+
+    // Class 方式：
+    // 参考：https://zh-hans.reactjs.org/docs/typechecking-with-proptypes.html
+    // 自 React v15.5 起，React.PropTypes 已移入另一个包中。请使用 "prop-types" 库 代替。
+    // 所以上面 又引用了prop-types.js
+    class MyTitle extends React.Component {
+      static propTypes = {
+        title: PropTypes.string.isRequired,
+      }
+      static defaultProps = {  // 设置组件属性默认值
+        title: 'Hello My React'
+      }
+      render() {
+        return <h1>{this.props.title}</h1>
+      }
+    }
+
+
+    // Class 方式2：
+    // 另一种写法   但建议写在class中，方便维护
+    class YourTitle extends React.Component {
+      
+      render() {
+        return <h1>{this.props.title}</h1>
+      }
+    }
+    YourTitle.propTypes = {
+      title: PropTypes.string.isRequired
+    }
+    YourTitle.defaultProps = {  // 设置组件属性默认值
+      title: 'Hello Your React'
+    }
+
+
+    // Hooks 方式：
+    const OurTitle = (props) => {
+      return (
+        <h1>{props.title}</h1>
+      )
+    }
+
+    OurTitle.propTypes = {
+      title: PropTypes.string.isRequired
+    }
+    OurTitle.defaultProps = {
+      title: 'Hello Our React'
+    }
+
+
+
+    // 使用与PropTypes限制有误的数字类型，查看console报错
+    var data = 123;
+
+    ReactDOM.render(
+      <React.Fragment>
+        <MyTitle title={data} />
+        <YourTitle title={data} />
+        <OurTitle title={data} />
+      </React.Fragment>,
+      document.getElementById('example')
+    )
+    // ReactDOM.render(
+    //   <MyTitle />,
+    //   document.getElementById('example')
+    // )
+  </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react-dom.js"></script>
+    <script src="../build/babel.min.js"></script>
+    <script src="../build/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script type="text/babel">
+      var UserGist = React.createClass({
+        getInitialState: function () {
+          return {
+            username: '',
+            lastGistUrl: ''
+          }
+        },
+
+        componentDidMount: function() {
+          $.get(this.props.source, function (result) {
+            var lastGist = result[0];
+
+            // if (this.isMounted()) {   // isMounted已弃用
+            //   this.setState({
+            //     username: lastGist.owner.login,
+            //     lastGistUrl: lastGist.html_url
+            //   });
+            // }
+            this.setState({
+              username: lastGist.owner.login,
+              lastGistUrl: lastGist.html_url
+            });
+          }.bind(this));
+        },
+
+        render: function () {
+          return (
+            <div>
+              {this.state.username}'s last gist is <a href={this.state.lastGistUrl}>here</a>.
+            </div>
+          );
+        }
+      });
+
+      ReactDOM.render(
+        <UserGist source="https://api.github.com/users/octocat/gists" />,
+        document.getElementById('example')
+      );
+    </script>
+  </body>
+</html>

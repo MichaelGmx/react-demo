@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo10</title>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.0/react-dom.js"></script> -->
+  <script src="../build/react.development.16.8.0.js"></script>
+  <script src="../build/react-dom.development.16.8.0.js"></script>
+  <script src="../build/babel.min.js"></script>
+</head>
+<body>
+  <div id="example"></div>
+  <script type="text/babel">
+    /**
+     * 生命周期
+     *   Mounting：  已插入真实 DOM
+     *   Updating：  正在被重新渲染
+     *   Unmounting：已移出真实 DOM
+     *
+     * componentWillMount()    // 16.X 废弃，17.0起 移除
+     * componentDidMount()
+     * componentWillUpdate(object nextProps, object nextState)
+     * componentDidUpdate(object prevProps, object prevState)
+     * componentWillUnmount() 
+     *
+     * componentWillReceiveProps(object nextProps)：已加载组件收到新的参数时调用
+     * shouldComponentUpdate(object nextProps, object nextState)：组件判断是否重新渲染时调用
+     * 
+     */
+
+    // // 15.x以前的方法(16.x以后已废弃)
+    // var Hello = React.createClass({
+    //   getInitialState: function() {
+    //     return {
+    //       opacity: 1.0
+    //     }
+    //   },
+    //   componentDidMount: function() {
+    //     this.timer = setInterval(function() {
+    //       var opacity = this.state.opacity;
+    //       opacity -= .05;
+    //       if (opacity < 0.1) {
+    //         opacity = 1.0;
+    //       }
+    //       this.setState({
+    //         opacity: opacity
+    //       });
+    //     }.bind(this), 100);
+    //   },
+    //   render: function() {
+    //     return (
+    //       <div style={{opacity: this.state.opacity}}>
+    //         Hello {this.props.name}
+    //       </div>
+    //     );
+    //   }
+    // });
+
+
+    // Class 方式：
+    class Hello extends React.Component {
+      // constructor(props) {
+      //   super(props);
+      //   this.state = {
+      //     opacity: 1.0
+      //   }
+      // }
+
+      // 同上，再次因为没有props相关的使用（render中除外），直接设置state即可
+      state = {
+        opacity: 1.0
+      };
+
+      componentDidMount() {  // 已插入真实DOM后
+        this.timer = setInterval(function () {
+          var myOpacity = this.state.opacity;
+          myOpacity -= .05;
+          if (myOpacity < 0.1) {
+            myOpacity = 1.0;
+          }
+          this.setState({
+            opacity: myOpacity
+          });
+        }.bind(this), 100);
+      }
+
+      render() {
+        return (
+          // 组件的style属性是 对象
+          // React 组件样式是一个对象，所以第一重大括号表示这是 JavaScript 语法，第二重大括号表示样式对象
+          <div style={{opacity: this.state.opacity}}>
+            Hello {this.props.name}
+          </div>
+        );
+      }
+    }
+
+
+    // Hooks 方式：
+    // Hooks 与setInterval不契合，需要一点小魔法
+    // 参考：https://overreacted.io/zh-hans/making-setinterval-declarative-with-react-hooks/
+    const Hello2 = (props) => {
+      const { name } = props;
+      const [opacity, setOpacity] = React.useState(1.0);
+      const savedCallback = React.useRef();
+
+      function callback() {
+        // 此处可以读取到 最新的props, state
+        let myOpacity = opacity;
+        myOpacity -= .05;
+        if (myOpacity < 0.1) {
+          myOpacity = 1.0;
+        }
+        setOpacity(myOpacity);
+      }
+
+      // 每次Render后，保存新的回调 到 ref 中
+      React.useEffect(() => {
+        savedCallback.current = callback;
+      });
+
+      // 首次加载、卸载时运行
+      React.useEffect(() => {
+        function tick() {
+          savedCallback.current();
+        }
+
+        let id = setInterval(tick, 100);
+        return () => clearInterval(id);
+      }, []);
+
+      return (
+        <div style={{opacity}}>
+          Hello {name}
+        </div>
+      );
+    };
+
+
+
+    // Hooks 方式2：
+    // 抽离并建立自定义Hooks，让code更简洁
+    function useInterval(callback, delay) {
+      const savedCallback = React.useRef();
+
+      // 保存新回调
+      React.useEffect(() => {
+        savedCallback.current = callback;
+      });
+
+      // 建立 interval
+      React.useEffect(() => {
+        function tick() {
+          savedCallback.current();
+        }
+        if (delay !== null) {
+          let id = setInterval(tick, delay);
+          return () => clearInterval(id);
+        }
+      }, [delay]);
+    }
+    const Hello3 = (props) => {
+      const { name } = props;
+      const [opacity, setOpacity] = React.useState(1.0)
+
+      // 使用自定义Hooks实现
+      useInterval(() => {
+        let myOpacity = opacity;
+        myOpacity -= .05;
+        if (myOpacity < 0.1) {
+          myOpacity = 1.0;
+        }
+        setOpacity(myOpacity);
+      }, 100);
+
+      return (
+        <div style={{opacity}}>
+          Hello {name}
+        </div>
+      );
+    };
+
+
+    ReactDOM.render(
+      <React.Fragment>
+        <Hello name="world" />
+        <Hello2 name="world" />
+        <Hello3 name="world" />
+      </React.Fragment>,
+      document.getElementById('example')
+    )
+  </script>
+</body>
+</html>
